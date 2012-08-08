@@ -30,66 +30,87 @@ config STARTABLET_GPS
      Support for GPS driver.
 
 config STARTABLET_GPS_BCM4751
-	bool "Star Tablet GPS BCM4751"
-	default n
+    bool "Star Tablet GPS BCM4751"
+    default n
     depends on STARTABLET_GPS && MACH_STARTABLET
     help
-     Support for GPS driver for xmm6160 only.
+       Support for GPS driver for xmm6160 only.
 
 config STAR_RIL
     bool "Star RIL Driver"
     default y
     depends on MACH_STARTABLET
     help
-     Suport for IFX MUX & SPI.
+       Support for IFX MUX & SPI.
 
 config SPI_MDM6600
-	tristate "SPI MDM6600 from Qualcomm"
-	depends on MACH_STARTABLET
-	help
-	Enable this driver to support MDM6600 Modem
+    tristate "SPI MDM6600 from Qualcomm"
+    depends on MACH_STARTABLET
+    help
+       Enable this driver to support MDM6600 Modem.
 
 config RINETWORK_DRIVER
-	bool "Raw ip network driver"
-	default y
-	depends on MACH_STARTABLET
-	help
-	  Support for raw ip network driver.
+    bool "Raw ip network driver"
+    default y
+    depends on MACH_STARTABLET
+    help
+       Support for raw ip network driver.
 
 config STARTABLET_BATTERY
     bool "Star Tablet Battery Driver"
     default n
     depends on MACH_STARTABLET
     help
-     Support for battery driver.
+       Support for battery driver.
 
 config STARTABLET_MISC
     bool "Star Tablet MISC Driver"
     default n
     depends on MACH_STARTABLET
     help
-     Support for MISC driver.
+       Support for MISC driver.
 
 config STARTABLET_ALS
     bool "Star Tablet ALS Driver"
     default n
     depends on MACH_STARTABLET
     help
-     Support for ALS driver.
+       Support for ALS driver.
 
 config STARTABLET_CAMERA_FLASH
-        bool "Star Camera Flash LED Test"
-        default y
-        depends on MACH_STARTABLET
-        help
-         Suport for Camera flash LED Q-test.
+     bool "Star Camera Flash LED Test"
+     default y
+     depends on MACH_STARTABLET
+     help
+        Support for Camera flash LED Q-test.
 
 config TOUCHSCREEN_ATMEL_MAXTOUCH
-	tristate "Atmel maXTouch based touchscreen: I2C Interface"
-	depends on I2C
-	default y
-	help
-	   To compile this driver as a module, choose M here: the
-	   module will be called atmel_tsadcc.
+    tristate "Atmel maXTouch based touchscreen: I2C Interface"
+    default y
+    depends on I2C
+    help
+       To compile this driver as a module, choose M here: the
+       module will be called atmel_tsadcc.
+
+config STAR_CP_WATCHER
+    bool "Star RIL Driver Status Watcher"
+    default y
+    depends on STAR_RIL
+    help
+       Suport for RIL Driver Status Watcher
+
+config STAR_CP_WATCHER_DEBUG
+    bool "Star RIL Driver Status Watcher DEBUG"
+    default n
+    depends on STAR_CP_WATCHER
+    help
+       Suport for RIL Driver Status Watcher DEBUG
+
+config STARTABLET_EVENT_LOG
+    bool "Star Tablet Event Log"
+    default n
+    depends on MACH_STARTABLET
+    help
+       Support for Ets driver.
 
 endmenu
