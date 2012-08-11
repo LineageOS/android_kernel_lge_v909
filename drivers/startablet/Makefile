@@ -31,9 +31,4 @@ obj-$(CONFIG_TOUCHSCREEN_ATMEL_MAXTOUCH)+= star_touch.o
 obj-y += star_ats.o
 obj-y += lge_ats_eta.o
 obj-y += lge_ats_event_log.o
-obj-$(CONFIG_STAR_CP_WATCHER) += cpwatcher.o
-obj-$(CONFIG_SPI_TEGRA)    += ifx_n721_spi.o
-obj-$(CONFIG_STARTABLET_CAMERA_FLASH)    += camera_flash.o
-obj-$(CONFIG_STARTABLET_EVENT_LOG) += star_ats.o
-obj-$(CONFIG_STARTABLET_EVENT_LOG) += lge_ats_eta.o
-obj-$(CONFIG_STARTABLET_EVENT_LOG) += lge_ats_event_log.o
+
