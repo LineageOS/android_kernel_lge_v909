@@ -163,35 +163,6 @@ u32 CRC_24(u32 crc, u8 byte1, u8 byte2)
 	return result;
 }
 
-u16 get_object_address(uint8_t object_type, uint8_t instance, struct mxt_object *object_table, int max_objs)
-{
-	uint8_t object_table_index = 0;
-	uint8_t address_found = 0;
-	uint16_t address = 0;
-
-	struct mxt_object obj;
-
-	while ((object_table_index < max_objs) && !address_found) {
-
-		obj = object_table[object_table_index];
-
-		if (obj.type == object_type) {
-
-			address_found = 1;
-
-			if (obj.instances >= instance) {
-				address = obj.chip_addr + (obj.size + 1) * instance;
-			}
-			else {
-				return 0;
-			}
-		}
-
-		object_table_index++;
-	}
-
-	return address;
-}
 
 int mxt_read_block(struct i2c_client *client, u16 addr, u16 length, u8 *value)
 {
@@ -232,54 +203,6 @@ int mxt_read_block(struct i2c_client *client, u16 addr, u16 length, u8 *value)
 	else
 		return -EIO;
 
-}
-
-int mxt_read_block_wo_addr(struct i2c_client *client, u16 length, u8 *value)
-{
-
-	if  (i2c_master_recv(client, value, length) == length) {
-
-		printk(KERN_INFO "read ok\n");
-		return length;
-	}
-	else {
-
-		printk(KERN_WARNING "read failed\n");
-		return -EIO;
-	}
-
-}
-
-int mxt_write_block(struct i2c_client *client, u16 addr, u16 length, u8 *value)
-{
-	int i;
-	struct {
-	__le16	le_addr;
-	u8	data[256];
-
-	} i2c_block_transfer;
-
-	struct mxt_data *mxt;
-
-	if (length > 256)
-		return -EINVAL;
-
-	mxt = i2c_get_clientdata(client);
-
-	if (mxt != NULL)
-		mxt->last_read_addr = -1;
-
-	for (i = 0; i < length; i++)
-		i2c_block_transfer.data[i] = *value++;
-
-	i2c_block_transfer.le_addr = cpu_to_le16(addr);
-
-	i = i2c_master_send(client, (u8 *) &i2c_block_transfer, length + 2);
-
-	if (i == (length + 2))
-		return length;
-	else
-		return -EIO;
 }
 
 static int mxt_reset(struct i2c_client *client)
@@ -974,27 +897,6 @@ int mXT1386_i2c_write_firmware(struct i2c_client *client, u16 *read_val, unsigne
 
 	else
 		return WRITE_MEM_FAILED;
-
-}
-
-int mXT1386_i2c_read_firmware(struct i2c_client *client, u8 *read_val, unsigned int len)
-{
-
-	struct i2c_msg wmsg;
-
-	int ret;
-
-	wmsg.addr = client->addr;
-	wmsg.flags = I2C_M_RD;
-	wmsg.len = len;
-	wmsg.buf = (u8 *)read_val;
-
-	ret = i2c_transfer(client->adapter, &wmsg, 1);
-
-	if (ret == 1)
-		return READ_MEM_OK;
-	else
-		return READ_MEM_FAILED;
 
 }
 
@@ -1974,40 +1876,6 @@ bool mxt_mem_clear(struct i2c_client *client)
 	return WRITE_MEM_OK;
 }
 
-u8 boot_reset(struct i2c_client *client, struct mxt_data *mxt)
-{
-
-	u8 *tmp;
-	u16 reg;
-
-	printk("boot_reset +\n");
-
-	tmp = (u8 *) kmalloc(1,GFP_KERNEL);
-
-	if (tmp == NULL) {
-		printk("maXTouch: Memory allocation failed in %s ,#%d!\n", __FUNCTION__, __LINE__);
-		return -ENOMEM;
-	}
-
-	if(mxt->device_info.major == 0 && mxt->device_info.minor == 7)
-		reg=0x00EF;
-	else
-		reg=0x0102;
-
-	*(tmp + 0)  = 0xA5;
-
-	if(mXT1386_i2c_write(client, reg, tmp, 1) < 0){
-		printk("maXTouch: i2c_write failed in %s ,#%d!\n", __FUNCTION__, __LINE__);
-		kfree(tmp);
-		return WRITE_MEM_FAILED;
-	}
-
-	kfree(tmp);
-
-	printk("boot_reset -\n");
-
-	return WRITE_MEM_OK;
-}
 
 u8 boot_reset_using_toggling(struct i2c_client *client, struct mxt_data *mxt)
 {
@@ -2044,28 +1912,6 @@ u8 boot_unlock(struct i2c_client *client)
 	printk("boot_unlock -\n");
 
 	return status;
-}
-
-u8 address_slave(struct i2c_client *client, u8* data)
-{
-	printk("address_slave +\n");
-
-	if(client->addr == I2C_BOOT_ADDR_0){
-		if((mXT1386_i2c_read_firmware(client, data, 2))!= READ_MEM_OK){
-			return READ_MEM_FAILED;
-		}
-	}
-
-	else{
-		client->addr = I2C_BOOT_ADDR_0;
-		if((mXT1386_i2c_read_firmware(client, data, 2))!= READ_MEM_OK){
-			client->addr = I2C_APPL_ADDR_0;
-			return READ_MEM_FAILED;
-		}
-	}
-	printk("address_slave -\n");
-
-	return CONNECT_OK;
 }
 
 u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt)
