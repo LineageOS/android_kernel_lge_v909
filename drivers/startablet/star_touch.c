@@ -814,12 +814,17 @@ static int __devinit mxt_read_object_table(struct i2c_client *client, struct mxt
 	error = mxt_read_block(client, object_info_address, 3, buf);
 	if (error < 0) {
 		mxt->read_fail_counter++;
-		dev_err(&client->dev, "Error reading CRC\n");
+		dev_err(&client->dev, "%s: Error reading CRC\n", __func__);
+		return error;
 	}
 
 	crc = (buf[2] << 16) | (buf[1] << 8) | buf[0];
 
-	calculate_infoblock_crc(&crc_calculated, mxt);
+	error = calculate_infoblock_crc(&crc_calculated, mxt);
+	if (error < 0) {
+		dev_err(&client->dev, "%s: Error calculatig CRC\n", __func__);
+		return error;
+	}
 
 	if (debug >= DEBUG_TRACE) {
 		printk(KERN_INFO "Reported info block CRC = 0x%6X\n\n", crc);
