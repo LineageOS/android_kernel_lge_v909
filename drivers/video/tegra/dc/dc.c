@@ -2851,6 +2851,7 @@ static void tegra_dc_reset_worker(struct work_struct *work)
 		container_of(work, struct tegra_dc, reset_work);
 
 	unsigned long val = 0;
+	unsigned long pwm_regs[5] = { 0 };
 
 	mutex_lock(&shared_lock);
 
@@ -2862,6 +2863,20 @@ static void tegra_dc_reset_worker(struct work_struct *work)
 
 	if (dc->enabled == false)
 		goto unlock;
+
+	/* save backlight pwm register */
+	if (dc->ndev->id == 0) {
+		pwm_regs[0] = tegra_dc_readl(dc, DC_COM_PIN_OUTPUT_SELECT5);
+		pwm_regs[1] = tegra_dc_readl(dc, DC_COM_PM0_CONTROL);
+		pwm_regs[2] = tegra_dc_readl(dc, DC_COM_PM0_DUTY_CYCLE);
+		pwm_regs[3] = tegra_dc_readl(dc, DC_COM_PM1_CONTROL);
+		pwm_regs[4] = tegra_dc_readl(dc, DC_COM_PM1_DUTY_CYCLE);
+
+		/* set backlight intensity  to 0 in order to hide the cracked
+		   LCD screen */
+		tegra_dc_writel(dc, 0, DC_COM_PM0_DUTY_CYCLE);
+		tegra_dc_writel(dc, 0, DC_COM_PM1_DUTY_CYCLE);
+       }
 
 	dc->enabled = false;
 
@@ -2891,6 +2906,15 @@ static void tegra_dc_reset_worker(struct work_struct *work)
 	val &= ~(0x00000100);
 	val |= 0x100;
 	tegra_dc_writel(dc, val, DC_CMD_CONT_SYNCPT_VSYNC);
+
+	/* restore LCD backlight pwm register */
+	if (dc->ndev->id == 0) {
+		tegra_dc_writel(dc, pwm_regs[0], DC_COM_PIN_OUTPUT_SELECT5);
+		tegra_dc_writel(dc, pwm_regs[1], DC_COM_PM0_CONTROL);
+		tegra_dc_writel(dc, pwm_regs[2], DC_COM_PM0_DUTY_CYCLE);
+		tegra_dc_writel(dc, pwm_regs[3], DC_COM_PM1_CONTROL);
+		tegra_dc_writel(dc, pwm_regs[4], DC_COM_PM1_DUTY_CYCLE);
+	}
 
 unlock:
 	mutex_unlock(&dc->lock);
