@@ -197,8 +197,8 @@ u8 boot_unlock(struct i2c_client *client);
 u8 address_slave(struct i2c_client *client, u8* data);
 u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt);
 u8 firmware_update(struct i2c_client *client, struct mxt_data *mxt);
-static int mxt_suspend(struct i2c_client *client);
-static int mxt_resume(struct i2c_client *client);
+static int mxt_suspend(struct device *dev);
+static int mxt_resume(struct device *dev);
 u16 get_object_address(uint8_t object_type, uint8_t instance, struct mxt_object *object_table, int max_objs);
 int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned int len);
 

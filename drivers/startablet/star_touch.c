@@ -126,7 +126,7 @@ static void mxt_early_suspend(struct early_suspend *h)
 	if(force_release_flag)
 		printk("mxT1386 : froce release for suspend\n");
 
-	status = mxt_suspend(pmxt->client);
+	status = mxt_suspend(&pmxt->client->dev);
 
 	if(status!=0){
 		printk("mxt_touch_suspend error  <<---\n");
@@ -142,7 +142,7 @@ static void  mxt_late_resume(struct early_suspend *h)
 
 	pmxt = container_of(h, struct mxt_data, early_suspend);
 
-	status=mxt_resume(pmxt->client);
+	status = mxt_resume(&pmxt->client->dev);
 
 	if(status!=0){
 		printk("mxt_touch_resume error  <<---\n");
@@ -1862,8 +1862,9 @@ static int __devexit mxt_remove(struct i2c_client *client)
 	return 0;
 }
 
-static int mxt_suspend(struct i2c_client *client)
+static int mxt_suspend(struct device *dev)
 {
+	struct i2c_client *client = to_i2c_client(dev);
 	mxt_suspend_flag = 1;
 
 	printk("### mxt_suspend_start!!! ### \n");
@@ -1879,9 +1880,9 @@ static int mxt_suspend(struct i2c_client *client)
 	return 0;
 }
 
-static int mxt_resume(struct i2c_client *client)
+static int mxt_resume(struct device *dev)
 {
-
+	struct i2c_client *client = to_i2c_client(dev);
 	printk("### mxt_resume_start!!! ###\n");
 
 	if(mxt_reset(client)){
