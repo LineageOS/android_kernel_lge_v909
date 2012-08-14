@@ -238,7 +238,6 @@ static struct tegra_fb_data star_fb_data = {
 	.xres		= 1280,
 	.yres		= 768,
 	.bits_per_pixel = 32,
-	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 };
 
 static struct tegra_fb_data star_hdmi_fb_data = {
