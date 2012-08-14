@@ -150,7 +150,7 @@ static void  mxt_late_resume(struct early_suspend *h)
 }
 #endif
 
-u32 CRC_24(u32 crc, u8 byte1, u8 byte2)
+static u32 CRC_24(u32 crc, u8 byte1, u8 byte2)
 {
 	static const u32 crcpoly = 0x80001B;
 	u32 result;
@@ -164,7 +164,7 @@ u32 CRC_24(u32 crc, u8 byte1, u8 byte2)
 }
 
 
-int mxt_read_block(struct i2c_client *client, u16 addr, u16 length, u8 *value)
+static int mxt_read_block(struct i2c_client *client, u16 addr, u16 length, u8 *value)
 {
 	struct i2c_adapter *adapter = client->adapter;
 	struct i2c_msg msg[2];
@@ -274,7 +274,7 @@ static int mxt_reset(struct i2c_client *client)
 	return 0;
 }
 
-int calculate_infoblock_crc(u32 *crc_result, struct mxt_data *mxt)
+static int calculate_infoblock_crc(u32 *crc_result, struct mxt_data *mxt)
 {
 	u32 crc = 0;
 	u16 crc_area_size;
@@ -315,7 +315,7 @@ int calculate_infoblock_crc(u32 *crc_result, struct mxt_data *mxt)
 
 }
 
-u8 process_error_message(u8 *message, struct mxt_data *mxt)
+static u8 process_error_message(u8 *message, struct mxt_data *mxt)
 {
 	struct i2c_client *client;
 	u8 status;
@@ -867,7 +867,7 @@ static int __devinit mxt_read_object_table(struct i2c_client *client, struct mxt
 	return 0;
 }
 
-int mXT1386_i2c_write_firmware(struct i2c_client *client, u16 *read_val, unsigned int len)
+static int mXT1386_i2c_write_firmware(struct i2c_client *client, u16 *read_val, unsigned int len)
 {
 
 	struct i2c_msg wmsg;
@@ -900,7 +900,7 @@ int mXT1386_i2c_write_firmware(struct i2c_client *client, u16 *read_val, unsigne
 
 }
 
-u8 boot_read_mem(struct i2c_client *client, u16 start, u8 size, u8 *mem)
+static u8 boot_read_mem(struct i2c_client *client, u16 start, u8 size, u8 *mem)
 {
 	struct i2c_msg rmsg;
 	int ret;
@@ -919,7 +919,7 @@ u8 boot_read_mem(struct i2c_client *client, u16 start, u8 size, u8 *mem)
 
 }
 
-int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned int len)
+static int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned int len)
 {
 
 	struct i2c_msg wmsg;
@@ -952,7 +952,7 @@ int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned
 	return ret;
 }
 
-u8 write_power_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_power_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -982,7 +982,7 @@ u8 write_power_config(struct i2c_client *client, struct mxt_data *mxt)
 	return ret;
 }
 
-u8 write_acquisition_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_acquisition_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1020,7 +1020,7 @@ u8 write_acquisition_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_multitouchscreen_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_multitouchscreen_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1090,7 +1090,7 @@ u8 write_multitouchscreen_config(struct i2c_client *client, struct mxt_data *mxt
 
 }
 
-u8 write_communications_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_communications_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1120,7 +1120,7 @@ u8 write_communications_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_noisesupression_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_noisesupression_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1165,7 +1165,7 @@ u8 write_noisesupression_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_cte_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_cte_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1199,7 +1199,7 @@ u8 write_cte_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_gripsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_gripsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1232,7 +1232,7 @@ u8 write_gripsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_palmsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_palmsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1267,7 +1267,7 @@ u8 write_palmsuppression_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_backup_config(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_backup_config(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u16	object_address;
 	u8*	tmp;
@@ -1296,7 +1296,7 @@ u8 write_backup_config(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 write_config_data(struct i2c_client *client, struct mxt_data *mxt)
+static u8 write_config_data(struct i2c_client *client, struct mxt_data *mxt)
 {
 
 	printk("mxt_config_data +\n");
@@ -1853,7 +1853,7 @@ static void __exit mxt_cleanup(void)
 }
 
 
-bool mxt_mem_clear(struct i2c_client *client)
+static bool mxt_mem_clear(struct i2c_client *client)
 {
 	u16 address;
 	u8 *tmp;
@@ -1877,7 +1877,7 @@ bool mxt_mem_clear(struct i2c_client *client)
 }
 
 
-u8 boot_reset_using_toggling(struct i2c_client *client, struct mxt_data *mxt)
+static u8 boot_reset_using_toggling(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u8 i;
 
@@ -1897,7 +1897,7 @@ u8 boot_reset_using_toggling(struct i2c_client *client, struct mxt_data *mxt)
 	return WRITE_MEM_OK;
 }
 
-u8 boot_unlock(struct i2c_client *client)
+static u8 boot_unlock(struct i2c_client *client)
 {
 	u16 data[2];
 	u8 status;
@@ -1914,7 +1914,7 @@ u8 boot_unlock(struct i2c_client *client)
 	return status;
 }
 
-u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt)
+static u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u8 retry_cnt;
 	u32 character_position = 0;
@@ -2105,7 +2105,7 @@ u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt)
 
 }
 
-u8 firmware_update(struct i2c_client *client, struct mxt_data *mxt)
+static u8 firmware_update(struct i2c_client *client, struct mxt_data *mxt)
 {
 	u8 version, build;
 	u16  * fptr;

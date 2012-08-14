@@ -188,14 +188,14 @@ static u8 fingerinfo_send = 0;
 #define		MXT_MSGB_T6_OFL					0x40
 #define		MXT_MSGB_T6_RESET				0x80
 
-int mxt_read__block(struct i2c_client *client, __u16 addr, __u16 length, __u8 *value);
-bool mxt_mem_clear(struct i2c_client *client);
-u8 boot_unlock(struct i2c_client *client);
-u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt);
-u8 firmware_update(struct i2c_client *client, struct mxt_data *mxt);
+static int mxt_read_block(struct i2c_client *client, __u16 addr, __u16 length, __u8 *value);
+static bool mxt_mem_clear(struct i2c_client *client);
+static u8 boot_unlock(struct i2c_client *client);
+static u8 mxt_boot(struct i2c_client *client, struct mxt_data *mxt);
+static u8 firmware_update(struct i2c_client *client, struct mxt_data *mxt);
 static int mxt_suspend(struct device *dev);
 static int mxt_resume(struct device *dev);
-int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned int len);
+static int mXT1386_i2c_write(struct i2c_client *client, u16 reg, u8 *read_val, unsigned int len);
 
 #define		MXT_BASE_ADDR(object_type) \
 get_object_address(object_type, 0, mxt->object_table, mxt->device_info.num_objs)
