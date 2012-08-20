@@ -45,7 +45,7 @@
 static void (*wifi_status_cb)(int card_present, void *dev_id);
 static void *wifi_status_cb_devid;
 static int startablet_wifi_status_register(void (*callback)(int , void *), void *);
-static int startablet_wifi_status(void*);
+static unsigned int startablet_wifi_status(struct device *);
 static struct clk *wifi_32k_clk;
 
 static int startablet_wifi_reset(int on);
@@ -170,7 +170,7 @@ static int startablet_wifi_status_register(
 	return 0;
 }
 
-static int startablet_wifi_status(void *dev_id)
+static unsigned int startablet_wifi_status(struct device *dev)
 {
 	pr_debug("%s:\n", __func__);
 
